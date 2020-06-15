@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS users(
 	id SERIAL PRIMARY KEY,
-	nickname VARCHAR(255) NOT NULL,
-	encrypted_password VARCHAR(255) NOT NULL,
+	nickname VARCHAR(255) UNIQUE NOT NULL,
+	encrypted_password VARCHAR(60) NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT now()
 );
