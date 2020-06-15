@@ -1,8 +1,6 @@
 package postgres
 
 import (
-	"log"
-
 	"github.com/jackc/pgx"
 	"github.com/wittyjudge/todo-api/internal/app/todo-api/domain/entities"
 	"github.com/wittyjudge/todo-api/internal/app/todo-api/domain/repository"
@@ -47,7 +45,7 @@ func (psql *postgresTodo) Store(todo *entities.Todo) error {
 	sql := `INSERT INTO todos(title, task) VALUES ($1, $2)`
 	_, err := psql.db.Exec(sql, &todo.Title, &todo.Task)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 
 	return nil
