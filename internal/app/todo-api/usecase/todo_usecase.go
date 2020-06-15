@@ -7,6 +7,7 @@ import (
 
 type TodoUsecase interface {
 	FetchAll() ([]entities.Todo, error)
+
 	Store(todo *entities.Todo) error
 	Delete(id int) (bool, error)
 }
