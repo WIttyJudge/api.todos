@@ -44,8 +44,6 @@ func main() {
 		// handlers.AllowCredentials(),
 	)
 
-	// route.Use(cors)
-
 	server := &http.Server{
 		Addr:         "127.0.0.1:8085",
 		Handler:      cors(route),
