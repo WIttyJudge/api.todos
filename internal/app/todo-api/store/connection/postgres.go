@@ -1,22 +1,27 @@
 package connection
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/jackc/pgx"
 	"github.com/wittyjudge/todo-api/internal/app/todo-api/utils"
 )
 
-// Connect inits connection to PostgreSQL
+// Connect inits connection to PostgreSQL.
 func Connect() *pgx.Conn {
-	// db := open("localhost", "5432", "postgres", "admin", "todo")
-	conn := utils.GetEnv("POSTGRES_URL")
-	db := open(conn)
+	host := utils.GetEnv("POSTGRES_HOST")
+	port := utils.GetEnv("POSTGRES_PORT")
+	user := utils.GetEnv("POSTGRES_USER")
+	password := utils.GetEnv("POSTGRES_PASSWORD")
+	dbName := utils.GetEnv("POSTGRES_DB")
+
+	connSrt := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", host, port, user, password, dbName)
+	db := open(connSrt)
 	return db
 }
 
 func open(connStr string) *pgx.Conn {
-	// connSrt := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", host, port, user, password, dbname)
 	conn, err := pgx.ParseConnectionString(connStr)
 	if err != nil {
 		log.Fatal(err)

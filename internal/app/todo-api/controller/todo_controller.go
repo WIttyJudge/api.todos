@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -46,15 +45,24 @@ func (c *todoController) AllTodos() http.HandlerFunc {
 }
 
 func (c *todoController) CreateTodo() http.HandlerFunc {
-	todo := &entities.Todo{}
+	type request struct {
+		Title string `json:"title"`
+		Task  string `json:"task"`
+	}
+	r := &request{}
 
 	return func(resp http.ResponseWriter, req *http.Request) {
 		resp.Header().Set("Content-type", "application/json")
 
-		if err := json.NewDecoder(req.Body).Decode(todo); err != nil {
+		if err := json.NewDecoder(req.Body).Decode(r); err != nil {
 			// c.error(resp, req, http.StatusBadRequest, err)
 			http.Error(resp, err.Error(), http.StatusBadRequest)
 			return
+		}
+
+		todo := &entities.Todo{
+			Title: r.Title,
+			Task:  r.Task,
 		}
 
 		err := c.usecase.Store(todo)
@@ -79,14 +87,13 @@ func (c *todoController) DeleteTodo() http.HandlerFunc {
 			return
 		}
 
-		deleted, err := c.usecase.Delete(id)
+		_, err = c.usecase.Delete(id)
 		if err != nil {
 			c.error(resp, req, http.StatusNoContent, err)
 			return
 		}
 
 		resp.WriteHeader(http.StatusOK)
-		fmt.Print(deleted)
 	}
 }
 

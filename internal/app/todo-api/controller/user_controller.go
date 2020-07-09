@@ -10,7 +10,6 @@ import (
 
 type UserController interface {
 	Login() http.HandlerFunc
-
 	Signup() http.HandlerFunc
 }
 

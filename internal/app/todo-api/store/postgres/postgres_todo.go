@@ -17,7 +17,7 @@ func NewPostgresTodo(db *pgx.Conn) repository.TodoRepository {
 func (psql *postgresTodo) FetchAll() ([]entities.Todo, error) {
 	todos := make([]entities.Todo, 0)
 
-	sql := `SELECT * FROM todos`
+	sql := `SELECT * FROM todos ORDER BY id DESC`
 	rows, err := psql.db.Query(sql)
 	if err != nil {
 		return nil, err
