@@ -1,0 +1,32 @@
+version: "3.0"
+
+services:
+  postgres:
+    image: postgres:12.3
+    container_name: postgres-12.3
+    ports:
+      - "5555:5432"
+    networks:
+      - backend
+    restart: always
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: todo
+
+  golang:
+    build: 
+      context: .
+      dockerfile: ./docker/golang/Dockerfile
+    container_name: golang-1.14
+    ports: 
+      - "8085:8085"
+    depends_on: 
+      - postgres
+    networks: 
+      - backend
+  
+networks:
+  backend:
