@@ -17,16 +17,16 @@ services:
       POSTGRES_DB: todo
 
   golang:
-    build: 
+    build:
       context: .
       dockerfile: ./docker/golang/Dockerfile
     container_name: golang-1.14
-    ports: 
+    ports:
       - "8085:8085"
-    depends_on: 
+    depends_on:
       - postgres
-    networks: 
+    networks:
       - backend
-  
+
 networks:
   backend:
