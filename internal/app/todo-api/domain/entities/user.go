@@ -7,6 +7,6 @@ type User struct {
 	ID                int        `json:"id"`
 	Nickname          string     `json:"nickname"`
 	Password          string     `json:"password"`
-	EncryptedPassword string     `json:"encrypted_password"`
+	EncryptedPassword string     `json:"-"`
 	CreateAt          *time.Time `json:"created_at"`
 }

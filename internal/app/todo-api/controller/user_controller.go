@@ -26,13 +26,12 @@ func (c *userController) Login() http.HandlerFunc {
 		Nickname string `json:"nickname"`
 		Password string `json:"password"`
 	}
+	r := &request{}
 
-	return func(resp http.ResponseWriter, req *http.Request) {
-		r := &request{}
-
-		resp.Header().Set("Content-type", "application/json")
+	return func(rw http.ResponseWriter, req *http.Request) {
+		rw.Header().Set("Content-type", "application/json")
 		if err := json.NewDecoder(req.Body).Decode(r); err != nil {
-			http.Error(resp, err.Error(), http.StatusBadRequest)
+			http.Error(rw, err.Error(), http.StatusBadRequest)
 			return
 		}
 
@@ -41,10 +40,14 @@ func (c *userController) Login() http.HandlerFunc {
 			Password: r.Password,
 		}
 
-		user, err := c.usecase.Login(user)
+		accessToken, err := c.usecase.Login(user)
 		if err != nil {
-			http.Error(resp, err.Error(), http.StatusUnauthorized)
+			rw.WriteHeader(http.StatusUnauthorized)
+			json.NewEncoder(rw).Encode(map[string]string{"error": err.Error()})
+			return
 		}
+
+		json.NewEncoder(rw).Encode(map[string]string{"access_token": accessToken})
 	}
 }
 

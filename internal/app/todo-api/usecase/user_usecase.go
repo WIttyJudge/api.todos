@@ -13,7 +13,7 @@ var (
 )
 
 type UserUsecase interface {
-	Login(user *entities.User) (*entities.User, error)
+	Login(user *entities.User) (string, error)
 
 	Store(user *entities.User) error
 }
@@ -21,10 +21,15 @@ type UserUsecase interface {
 type userUsecase struct {
 	repo    repository.UserRepository
 	service service.UserService
+	jwt     JWTUsecase
 }
 
 func NewUserUsecase(repo repository.UserRepository, service service.UserService) UserUsecase {
-	return &userUsecase{repo, service}
+	return &userUsecase{
+		repo:    repo,
+		service: service,
+		jwt:     NewJWTUsecase(),
+	}
 }
 
 func (u *userUsecase) Store(user *entities.User) error {
@@ -42,19 +47,21 @@ func (u *userUsecase) Store(user *entities.User) error {
 	return u.repo.Store(user)
 }
 
-func (u *userUsecase) Login(user *entities.User) (*entities.User, error) {
+func (u *userUsecase) Login(user *entities.User) (string, error) {
 	findedUser, err := u.repo.FindByNickname(user.Nickname)
 	if err != nil {
-		return nil, ErrUserNotFound
+		return "", ErrUserNotFound
 	}
 
 	err = u.service.CompatePassword(findedUser.EncryptedPassword, user.Password)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
-	// if !exists {
-	// 	return nil, errors.New("Password incorrect")
-	// }
 
-	return findedUser, nil
+	accessToken, err := u.jwt.GenerateJWT(findedUser)
+	if err != nil {
+		return "", err
+	}
+
+	return accessToken, nil
 }
