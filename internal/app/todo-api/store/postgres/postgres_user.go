@@ -1,16 +1,16 @@
 package postgres
 
 import (
-	"github.com/jackc/pgx"
+	"github.com/jmoiron/sqlx"
 	"github.com/wittyjudge/todo-api/internal/app/todo-api/domain/entities"
 	"github.com/wittyjudge/todo-api/internal/app/todo-api/domain/repository"
 )
 
 type postgresUser struct {
-	db *pgx.Conn
+	db *sqlx.DB
 }
 
-func NewPostgresUser(db *pgx.Conn) repository.UserRepository {
+func NewPostgresUser(db *sqlx.DB) repository.UserRepository {
 	return &postgresUser{db}
 }
 

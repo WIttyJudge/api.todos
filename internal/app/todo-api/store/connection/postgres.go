@@ -4,33 +4,40 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/jackc/pgx"
+	_ "github.com/jackc/pgx/stdlib"
+	"github.com/jmoiron/sqlx"
 	"github.com/wittyjudge/todo-api/internal/app/todo-api/utils"
 )
 
 // Connect inits connection to PostgreSQL.
-func Connect() *pgx.Conn {
-	host := utils.GetEnv("POSTGRES_HOST")
-	port := utils.GetEnv("POSTGRES_PORT")
+func Connect() *sqlx.DB {
 	user := utils.GetEnv("POSTGRES_USER")
 	password := utils.GetEnv("POSTGRES_PASSWORD")
+	host := utils.GetEnv("POSTGRES_HOST")
+	port := utils.GetEnv("POSTGRES_PORT")
 	dbName := utils.GetEnv("POSTGRES_DB")
 
-	connSrt := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s", host, port, user, password, dbName)
+	// postgres://postgres:admin@localhost:5432/todo
+	connSrt := fmt.Sprintf("postgres://%s:%s@%s:%s/%s", user, password, host, port, dbName)
 	db := open(connSrt)
 	return db
 }
 
-func open(connStr string) *pgx.Conn {
-	conn, err := pgx.ParseConnectionString(connStr)
+func open(connStr string) *sqlx.DB {
+	db, err := sqlx.Connect("pgx", connStr)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	db, err := pgx.Connect(conn)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// conn, err := pgx.ParseConnectionString(connStr)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// db, err := pgx.Connect(conn)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
 	return db
 }
