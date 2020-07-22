@@ -24,15 +24,3 @@ func (s *UserService) CompatePassword(hashedStr, str string) error {
 
 	return nil
 }
-
-func (s *UserService) PasswordValidation(password string) error {
-	if len(password) == 0 {
-		return errors.New("Required password")
-	}
-
-	if len(password) < 5 {
-		return errors.New("Password must have more characters then 5")
-	}
-
-	return nil
-}
