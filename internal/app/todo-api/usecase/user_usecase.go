@@ -33,7 +33,7 @@ func NewUserUsecase(repo repository.UserRepository, service service.UserService)
 }
 
 func (u *userUsecase) Store(user *entities.User) error {
-	if err := u.service.PasswordValidation(user.Password); err != nil {
+	if err := user.Validate(); err != nil {
 		return err
 	}
 
