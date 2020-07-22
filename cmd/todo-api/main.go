@@ -30,12 +30,13 @@ var (
 func main() {
 	route := mux.NewRouter()
 
-	route.HandleFunc("/api/todos", todoController.AllTodos()).Methods("GET")
-	route.HandleFunc("/api/todos", todoController.CreateTodo()).Methods("POST")
-	route.HandleFunc("/api/todos/{id}", todoController.DeleteTodo()).Methods("DELETE")
+	api := route.PathPrefix("/api").Subrouter()
+	api.HandleFunc("/todos", todoController.AllTodos()).Methods("GET")
+	api.HandleFunc("/todos", todoController.CreateTodo()).Methods("POST")
+	api.HandleFunc("/todos/{id}", todoController.DeleteTodo()).Methods("DELETE")
 
-	route.HandleFunc("/api/login", userController.Login()).Methods("POST")
-	route.HandleFunc("/api/signup", userController.Signup()).Methods("POST")
+	api.HandleFunc("/login", userController.Login()).Methods("POST")
+	api.HandleFunc("/signup", userController.Signup()).Methods("POST")
 
 	cors := handlers.CORS(
 		handlers.AllowedOrigins([]string{"http://localhost:8080"}),
