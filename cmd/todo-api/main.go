@@ -31,6 +31,7 @@ func main() {
 	route := mux.NewRouter()
 
 	api := route.PathPrefix("/api").Subrouter()
+	api.HandleFunc("/test", func(rw http.ResponseWriter, req *http.Request) { rw.Write([]byte("TEST")) }).Methods("GET")
 	api.HandleFunc("/todos", todoController.AllTodos()).Methods("GET")
 	api.HandleFunc("/todos", todoController.CreateTodo()).Methods("POST")
 	api.HandleFunc("/todos/{id}", todoController.DeleteTodo()).Methods("DELETE")
