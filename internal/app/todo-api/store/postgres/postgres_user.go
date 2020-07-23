@@ -17,11 +17,6 @@ func NewPostgresUser(db *sqlx.DB) repository.UserRepository {
 func (psql *postgresUser) FindByNickname(nickname string) (*entities.User, error) {
 	user := &entities.User{}
 
-	// err := psql.db.QueryRow("SELECT nickname, encrypted_password FROM users WHERE nickname = $1", nickname).Scan(&user.Nickname)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
 	sql := `SELECT id, nickname, encrypted_password FROM users WHERE nickname = $1`
 	err := psql.db.QueryRow(sql, nickname).Scan(&user.ID, &user.Nickname, &user.EncryptedPassword)
 	if err != nil {

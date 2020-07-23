@@ -39,10 +39,5 @@ func (psql *postgresTodo) Delete(id int) (bool, error) {
 	sql := `DELETE FROM todos WHERE id = $1`
 	psql.db.MustExec(sql, id)
 
-	// _, err := psql.db.Exec(sql, id)
-	// if err != nil {
-	// 	return false, err
-	// }
-
 	return true, nil
 }
