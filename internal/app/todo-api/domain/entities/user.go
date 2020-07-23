@@ -8,13 +8,12 @@ import (
 
 // User is an entity of users database table.
 // Nickname and password is required.
-
 type User struct {
 	ID                int        `json:"id"`
 	Nickname          string     `json:"nickname"`
 	Password          string     `json:"password"`
-	EncryptedPassword string     `json:"-"`
-	CreateAt          *time.Time `json:"created_at"`
+	EncryptedPassword string     `json:"-" db:"encrypted_password"`
+	CreatedAt         *time.Time `json:"created_at" db:"created_at"`
 }
 
 // Validate validates User struct fields.
