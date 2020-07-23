@@ -1,8 +1,6 @@
 package service
 
 import (
-	"errors"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -19,7 +17,7 @@ func (s *UserService) EncryptString(str string) (string, error) {
 
 func (s *UserService) CompatePassword(hashedStr, str string) error {
 	if err := bcrypt.CompareHashAndPassword([]byte(hashedStr), []byte(str)); err != nil {
-		return errors.New("Incorrect password")
+		return err
 	}
 
 	return nil

@@ -9,7 +9,8 @@ import (
 )
 
 var (
-	ErrUserNotFound = errors.New("User does not exist")
+	ErrUserNotFound      = errors.New("User does not exist")
+	ErrIncorrectPassword = errors.New("Incorrect password")
 )
 
 type UserUsecase interface {
@@ -55,7 +56,7 @@ func (u *userUsecase) Login(user *entities.User) (string, error) {
 
 	err = u.service.CompatePassword(findedUser.EncryptedPassword, user.Password)
 	if err != nil {
-		return "", err
+		return "", ErrIncorrectPassword
 	}
 
 	accessToken, err := u.jwt.GenerateJWT(findedUser)
